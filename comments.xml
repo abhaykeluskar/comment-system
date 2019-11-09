@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet type="text/xsl" href="comments.xsl"?> -->
+<!DOCTYPE comments [
+<!ELEMENT comments (commentData)*>
+<!ELEMENT commentData (commenterName , commenterEmail , commentText)>
+<!ELEMENT commenterName (#PCDATA)>
+<!ELEMENT commenterEmail (#PCDATA)>
+<!ELEMENT commentText (#PCDATA)>
+<!ATTLIST commenterEmail type CDATA "yes">
+]>
+<comments>
+
+    <commentData>
+        <commenterName>Abhay</commenterName>
+        <commenterEmail type="yes">abhay@xyz.com</commenterEmail>
+        <commentText>Hello</commentText>
+    </commentData>
+    <commentData>
+        <commenterName>Abhay</commenterName>
+        <commenterEmail type="yes">abhay@xyz.com</commenterEmail>
+        <commentText>Hello World</commentText>
+    </commentData>
+    <commentData>
+        <commenterName>Jone Doe</commenterName>
+        <commenterEmail type="yes">Jone@xyz.com</commenterEmail>
+        <commentText>Nice</commentText>
+    </commentData>
+    <commentData>
+        <commenterName>Test</commenterName>
+        <commenterEmail type="yes">Test@xyz.com</commenterEmail>
+        <commentText>OK</commentText>
+    </commentData>
+    <commentData>
+        <commenterName>chrome</commenterName>
+        <commenterEmail type="yes">chrome@chrome.com</commenterEmail>
+        <commentText>This is a test from chrome</commentText>
+    </commentData>
+    <commentData>
+        <commenterName>Edge</commenterName>
+        <commenterEmail type="yes">edge@edge.com</commenterEmail>
+        <commentText>Testing this again from edge</commentText>
+    </commentData>
+</comments>

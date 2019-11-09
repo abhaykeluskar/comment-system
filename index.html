@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>XML DOM Manupalatioin</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <style>
+        .tip {
+            width: 0px;
+            height: 0px;
+            position: absolute;
+            background: transparent;
+            border: 10px solid #ccc;
+        }
+
+        .tip-up {
+            top: -25px;
+            /* Same as body margin top + border */
+            left: 10px;
+            border-right-color: transparent;
+            border-left-color: transparent;
+            border-top-color: transparent;
+        }
+
+        .dialogbox .body {
+            position: relative;
+            max-width: 100%;
+            height: auto;
+            margin: 20px 10px;
+            padding: 5px;
+            background-color: #DADADA;
+            border-radius: 3px;
+            border: 5px solid #ccc;
+        }
+
+        .body .message {
+            min-height: 30px;
+            border-radius: 3px;
+            font-family: Arial;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #797979;
+        }
+
+        .commentHead {
+            color: aqua;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <form id="postingComment" action="/" method="POST">
+            <h3>Submit your Comments</h3>
+            <div class="form-group form-row">
+                <div class="col-6 col-lg-12">
+                    <textarea name="commentText" id="comment-text" maxlength="1000" cols="45" rows="8"
+                        placeholder="Type your comment" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-6">
+                    <input type="text" name="commenterName" class="form-control" id="comment-name" placeholder="Name*"
+                        required>
+                </div>
+            </div>
+
+            <div class="from-group form-row">
+                <div class="col-6">
+                    <input type="email" name="commenterEmail" class="form-control" id="comment-email"
+                        placeholder="Email*" required>
+                    <p class="form-text text-muted">Required Feilds are marked*</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row mt-2">
+                <div class="col-3 align-self-end">
+                    <button class="btn btn-primary" id="comment-submit" type="submit" value="submit">Submit</button>
+                </div>
+            </div>
+
+        </form>
+
+        <div id="demo"><input type="button" class="btn btn-primary" id="commentLoader" name="CommentLoader"
+                value=" Load Comments" onclick="loadComments()" />
+        </div>
+    </div>
+</body>
+
+<script>
+    //************Commenting System***************//
+    $(document).ready(function () {
+        $('#postingComment').submit(function () {
+            // show that something is loading
+
+            $.ajax({
+                type: 'POST',
+                url: 'updatexml.php',
+                data: $(this).serialize()
+            })
+                .done(function (data) {
+
+                    console.log(data);
+
+                })
+                .fail(function () {
+
+                    alert("Posting failed.");
+
+                });
+
+            $("#commentLoader").removeClass("invisible");
+            document.getElementById("demo").innerHTML = "<input type='button' class='btn btn-outline-info' id='commentLoader' name='CommentLoader' value=' Upoading...' onclick='loadComments()'/>";
+            $('#commentLoader').prop('value','Load Comments');
+            
+            //loadComments();
+            return false;
+
+        });
+    });
+
+    //************Loading Comments On********************
+
+    function loadComments() {
+        //Creating XMLHttpsrquest object
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                myFunction(this);
+            }
+        };
+        xhttp.open("GET", "comments.xml", true  );
+        xhttp.send();
+    }
+
+    function myFunction(xml) {
+        var i;
+        var commentDoc = xml.responseXML;
+        var comment = "";
+        console.log(commentDoc);
+        
+        var x = commentDoc.getElementsByTagName("commentData");
+        for (i = (x.length-1); i >= 0; i--) {
+            comment += "<div class='dialogbox'> <h6 class = 'commentHead'>" + x[i].getElementsByTagName('commenterName')[0].childNodes[0].nodeValue + " </h6> <div class='body'> <span class='tip tip-up'></span> <div class='message'> <span> " + x[i].getElementsByTagName('commentText')[0].childNodes[0].nodeValue + "</span> </div> </div> </div> ";
+        }
+        //console.log(comment);
+        document.getElementById("demo").innerHTML = comment;
+        $("#commentLoader").addClass("invisible");
+    }
+</script>
+
+</html>
